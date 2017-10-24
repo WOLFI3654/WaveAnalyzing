@@ -17,13 +17,17 @@ time_series is the recurrent data points in one stream.
 feature_num is the number of features in one data point.
 '''
 def make_fake_data(num_of_data, batch_size, time_series, feature_num):
-    data = np.random.normal(0, 0.1, [num_of_data, batch_size, time_series, feature_num])
-    label = np.random.randint(2, size=(num_of_data, batch_size))
+    # Creating (num_of_data * batch_size, time_series, feature_num) data
+    # num_of_data * batch_size = total number of data
+    data = np.random.normal(0, 0.1, [num_of_data * batch_size, time_series, feature_num])
+    label = np.random.randint(2, size=(num_of_data * batch_size))
     return data, label
 
+# Change these code here to fit in your case.
 print('Loading data...')
 x_train, y_train = make_fake_data(num_of_data, batch_size, time_series, feature_num)
 x_test, y_test = make_fake_data(num_of_data, batch_size, time_series, feature_num)
+#
 print(len(x_train), 'train sequences')
 print(len(x_test), 'test sequences')
 
@@ -31,11 +35,16 @@ print('x_train shape:', x_train.shape)
 print('x_test shape:', x_test.shape)
 
 print('Build model...')
+# Sequential is a nice keras neural network wrapper
 model = Sequential()
+# LSTM is a variant of RNN. LSTM performs generally better than RNN in all tasks.
 model.add(LSTM(128, input_shape=(time_series, feature_num)))
+# Linear layer which maps 128 -> 1, 1 is for binary classification.
 model.add(Dense(1, activation='sigmoid'))
 
-# try using different optimizers and different optimizer configs
+# Compile the whole model, binary_crossentropy for binary classification
+# Adam is a generally nice optimizer
+# metrics = ['accuracy'] to measure the result in accuracy
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
@@ -44,7 +53,7 @@ print('Train...')
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=5,
-          validation_data=(x_test, y_test))
+          )
 score, acc = model.evaluate(x_test, y_test,
                             batch_size=batch_size)
 print('Test score:', score)
