@@ -4,6 +4,7 @@ from keras.models import load_model
 from keras.layers import Dense
 from keras.layers import LSTM
 
+train = true
 num_of_data = 100
 batch_size = 32
 time_series = 8
@@ -50,12 +51,19 @@ model.compile(loss='binary_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
-print('Train...')
-model.fit(x_train, y_train,
-          batch_size=batch_size,
-          epochs=5,
-          )
-score, acc = model.evaluate(x_test, y_test,
+if train
+    print('Train...')
+    model.fit(x_train, y_train,
+            batch_size=batch_size,
+            epochs=5,
+            )
+    score, acc = model.evaluate(x_test, y_test,
                             batch_size=batch_size)
-print('Test score:', score)
-print('Test accuracy:', acc)
+    print('Test score:', score)
+    print('Test accuracy:', acc)
+    model.save_weights("model")
+else
+    model.load_weights("model")
+    # start using
+
+
