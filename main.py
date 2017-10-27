@@ -35,23 +35,23 @@ print(len(x_test), 'test sequences')
 
 print('x_train shape:', x_train.shape)
 print('x_test shape:', x_test.shape)
-
-print('Build model...')
-# Sequential is a nice keras neural network wrapper
-model = Sequential()
-# LSTM is a variant of RNN. LSTM performs generally better than RNN in all tasks.
-model.add(LSTM(128, input_shape=(time_series, feature_num)))
-# Linear layer which maps 128 -> 1, 1 is for binary classification.
-model.add(Dense(1, activation='sigmoid'))
-
-# Compile the whole model, binary_crossentropy for binary classification
-# Adam is a generally nice optimizer
-# metrics = ['accuracy'] to measure the result in accuracy
-model.compile(loss='binary_crossentropy',
-              optimizer='adam',
-              metrics=['accuracy'])
-
 if train
+
+    print('Build model...')
+    # Sequential is a nice keras neural network wrapper
+    model = Sequential()
+    # LSTM is a variant of RNN. LSTM performs generally better than RNN in all tasks.
+    model.add(LSTM(128, input_shape=(time_series, feature_num)))
+    # Linear layer which maps 128 -> 1, 1 is for binary classification.
+    model.add(Dense(1, activation='sigmoid'))
+
+    # Compile the whole model, binary_crossentropy for binary classification
+    # Adam is a generally nice optimizer
+    # metrics = ['accuracy'] to measure the result in accuracy
+    model.compile(loss='binary_crossentropy',
+                  optimizer='adam',
+                  metrics=['accuracy'])
+
     print('Train...')
     model.fit(x_train, y_train,
             batch_size=batch_size,
@@ -61,9 +61,12 @@ if train
                             batch_size=batch_size)
     print('Test score:', score)
     print('Test accuracy:', acc)
-    model.save_weights("model")
+    model.save("model.h5")
 else
-    model.load_weights("model")
+    model = load_model("model.h5")
     # start using
 
-
+    score, acc = model.evaluate(x_test, y_test,
+                            batch_size=batch_size)
+    print('Test score:', score)
+    print('Test accuracy:', acc)
