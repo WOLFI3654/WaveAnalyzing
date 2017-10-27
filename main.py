@@ -1,5 +1,6 @@
 import numpy as np
 from keras.models import Sequential
+from keras.models import load_model
 from keras.layers import Dense
 from keras.layers import LSTM
 
@@ -10,8 +11,8 @@ feature_num = 100
 '''
 Make fake data for time series case.
 num_of_data is the number of all data points.
-batch_size is the number of batch. 
-Batch is the size that number of data points in one training process, 
+batch_size is the number of batch.
+Batch is the size that number of data points in one training process,
 a resonable batch_size(32 ~ 128) would make training smoother.
 time_series is the recurrent data points in one stream.
 feature_num is the number of features in one data point.
